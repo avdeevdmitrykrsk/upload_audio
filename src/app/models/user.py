@@ -7,7 +7,7 @@ from app.core.db import Base
 
 class User(SQLAlchemyBaseUserTable[int], Base):
     login = Column(String())
-    audio_files = relationship('AudioFile', back_populates='user')
+    audio_files = relationship('UserAudioFile', back_populates='user')
 
 
 class UserAudioFile(Base):
