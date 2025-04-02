@@ -1,4 +1,3 @@
-from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Boolean, Integer, String, ForeignKey
 

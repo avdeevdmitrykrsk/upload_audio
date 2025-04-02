@@ -1,12 +1,10 @@
 # app/api/endpoints/user.py
-import os
 from http import HTTPStatus
 
-from dotenv import load_dotenv
+import httpx
 from fastapi import APIRouter, FastAPI, Request, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import RedirectResponse, Response
-import httpx
 from jose import jwt, JWTError
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -17,7 +15,6 @@ from app.core.user import get_current_superuser, get_current_user, user_manager
 from app.models import User
 from app.schemas.user import UserCreate, UserRead, UserUpdate
 
-load_dotenv()
 
 router = APIRouter(prefix='/users')
 
