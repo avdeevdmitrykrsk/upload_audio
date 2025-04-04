@@ -26,21 +26,12 @@ from sqlalchemy import select
 
 from app.core.config import settings
 from app.core.db import get_async_session
-from app.core.user import user_manager
+from app.core.security import access_security, refresh_security
+from app.crud.user import crud_user
 from app.models import User
 from app.schemas.user import UserCreate, UserRead, UserUpdate
 
 router = APIRouter(prefix='/auth')
-
-
-access_security = JwtAccessBearer(
-    secret_key=settings.secret_key,
-    access_expires_delta=timedelta(hours=settings.exp_access_token),
-)
-refresh_security = JwtRefreshBearer(
-    secret_key=settings.secret_key,
-    refresh_expires_delta=timedelta(days=settings.exp_refresh_token),
-)
 
 
 @router.get('/yandex')
@@ -124,7 +115,7 @@ async def auth_yandex_callback(
             'is_superuser': False,
             'yandex_id': yandex_id,
         }
-        user: User = await user_manager.create(session, user_data)
+        user: User = await crud_user.create(session, user_data)
     else:
         if not user.yandex_id:
             user.yandex_id = yandex_id
