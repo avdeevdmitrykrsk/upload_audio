@@ -11,7 +11,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
-from app.core.user import get_current_superuser, get_current_user, user_manager
+from app.core.user import (
+    check_owner_or_superuser,
+    get_current_superuser,
+    get_current_user,
+)
+from app.crud.user import crud_user
 from app.models import User
 from app.schemas.user import UserCreate, UserRead, UserUpdate
 
@@ -31,7 +36,7 @@ async def get_user(
     user_id: int,
     session: AsyncSession = Depends(get_async_session),
 ) -> User:
-    return await user_manager.get_by_id(session, user_id)
+    return await crud_user.get_or_404(session, user_id)
 
 
 @router.delete(
@@ -44,12 +49,12 @@ async def delete_user(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Только для superuser."""
-    await user_manager.delete(session, user_id)
+    await crud_user.delete(session, user_id)
 
 
 @router.patch(
     '/{user_id}',
-    dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(check_owner_or_superuser)],
 )
 async def update_user(
     user_id: int,
@@ -57,6 +62,6 @@ async def update_user(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Только для superuser."""
-    return await user_manager.update(
+    return await crud_user.update(
         session, user_id, user_data.dict(exclude_unset=True)
     )

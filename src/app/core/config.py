@@ -1,6 +1,9 @@
 import os
 
+from dotenv import load_dotenv
 from pydantic import BaseSettings
+
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -10,8 +13,8 @@ class Settings(BaseSettings):
     posgres_user: str = os.getenv('POSTGRES_USER')
     postgres_password: str = os.getenv('POSTGRES_PASSWORD')
     postgres_db: str = os.getenv('POSTGRES_DB')
-    db_host: int = os.getenv('DB_HOST')
-    db_port: int = os.getenv('DB_PORT')
+    db_host: str = os.getenv('DB_HOST')
+    db_port: str = os.getenv('DB_PORT')
 
     # auth
     secret_key: str = os.getenv('SECRET_KEY')
